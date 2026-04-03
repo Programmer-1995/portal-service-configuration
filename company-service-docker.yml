@@ -1,4 +1,7 @@
 spring:
+  cloud:
+    config:
+      fail-fast: true
   config:
     import: "optional:configserver:http://configserver:8888"
   rabbitmq:
