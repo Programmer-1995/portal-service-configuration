@@ -1,8 +1,16 @@
 spring:
   cloud:
     config:
-      uri: "http://configserver:8888?fail-fast=true&max-attempts=10&max-interval=1500&multiplier=1.2&initial-interval=1100"
-      label: main
+      uri: http://configserver:8888
+      label: main           # important: fetch from 'main' branch
+      fail-fast: true
+      retry:
+        max-attempts: 10
+        max-interval: 1500
+        multiplier: 1.2
+        initial-interval: 1100
+      request-read-timeout: 40000
+      request-connect-timeout: 7000
   profiles:
     active: test
   #config:
