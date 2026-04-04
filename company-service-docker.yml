@@ -1,4 +1,9 @@
 spring:
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: admin
+    password: Pali$8619216837
   datasource:
     url: jdbc:postgresql://postgresql:5432/company_service_db
     username: job_user
@@ -17,7 +22,7 @@ spring:
 
 server:
   port: 8081
-  
+
 management:
   zipkin:
     tracing:
@@ -37,3 +42,24 @@ management:
     info:
       env:
         enabled: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: "http://eureka-service:8761/eureka"
+    fetch-registry: true
+    register-with-eureka: true
+
+jobs:
+  service:
+    url: http://jobs-service:8082
+
+companies:
+  service:
+    url: http://companies-service:8081
+
+reviews:
+  service:
+    url: http://reviews-service:8083    
