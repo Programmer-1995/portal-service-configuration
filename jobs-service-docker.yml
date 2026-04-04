@@ -1,0 +1,91 @@
+spring:
+  config:
+    import: "optional:configserver:http://configserver:8888"
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: admin
+    password: Pali$8619216837
+  datasource:
+    url: jdbc:postgresql://postgresql:5432/jobs_service_db
+    username: job_user
+    password: Pali$8619216837
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        jdbc:
+          time_zone: Asia/Kolkata
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
+
+server:
+  port: 8081
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1.0
+    endpoints:
+      web:
+        exposure:
+          include: "health"
+    endpoint:
+      shutdown:
+        access: unrestricted
+      health:
+        show-details: always
+    info:
+      env:
+        enabled: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: "http://eureka-service:8761/eureka"
+    fetch-registry: true
+    register-with-eureka: true
+
+resilience4j:
+  ratelimiter:
+    instances:
+      companyBreaker:
+        timeout-duration: 0
+        limit-refresh-period: 4
+        limit-for-period: 2
+  retry:
+    instances:
+      companyRetry:
+        max-attempts: 5
+        wait-duration: 2s
+  circuitbreaker:
+    instances:
+      companyBreaker:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        wait-duration-in-open-state: 10s
+        failure-rate-threshold: 50
+        automatic-transition-from-open-to-half-open-enabled: true
+        sliding-window-type: count_based
+
+jobs:
+  service:
+    url: http://jobs-service:8082
+
+companies:
+  service:
+    url: http://companies-service:8081
+
+reviews:
+  service:
+    url: http://reviews-service:8083
