@@ -1,13 +1,12 @@
 spring:
   cloud:
     config:
-      request-connect-timeout: 5000
-      request-read-timeout: 30000
-      fail-fast: true
+      uri: "http://configserver:8888?fail-fast=true&max-attempts=10&max-interval=1500&multiplier=1.2&initial-interval=1100"
+      label: main
   profiles:
     active: test
-  config:
-    import: "optional:configserver:http://configserver:8888?label=main"
+  #config:
+    #import: "optional:configserver:http://configserver:8888?label=main"
   rabbitmq:
     host: rabbitmq
     port: 5672
