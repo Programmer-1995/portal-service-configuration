@@ -1,4 +1,9 @@
 spring:
+  cloud:
+    config:
+      request-connect-timeout: 5000
+      request-read-timeout: 30000
+      fail-fast: true
   rabbitmq:
     host: localhost
     port: 5672
