@@ -6,6 +6,7 @@ spring:
       request-connect-timeout: 5000
       request-read-timeout: 30000
       fail-fast: true
+      label: main    
   config:
     import: "optional:configserver:http://configserver:8888"
   rabbitmq:
