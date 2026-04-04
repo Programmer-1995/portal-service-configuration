@@ -1,0 +1,96 @@
+spring:  
+  config:
+    import: "optional:configserver:http://configserver:8888"
+  datasource:
+    url: jdbc:postgresql://localhost:5432/jobs_service_db
+    username: job_user
+    password: Pali$8619216837
+  jpa:
+      properties:
+        hibernate:
+          format_sql: true
+          show_sql: true
+          jdbc:
+            time_zone: Asia/Kolkata
+      hibernate:
+        naming:
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        ddl-auto: update
+      database: POSTGRESQL
+
+  management:
+    health:
+      circuitbreakers:
+        enabled: true
+    tracing:
+      sampling:
+        probability: 1.0
+    endpoints:
+      web:
+        exposure:
+          include: "*"
+    endpoint:
+      shutdown:
+        access: unrestricted
+      health:
+        show-details: always
+    info:
+      env:
+        enabled: true
+  server:
+    port: 8082
+
+  company:
+    base:
+      url: http://COMPANY-SERVICE:8081/api/companies
+
+  review:
+    base:
+      url: http://REVIEW-SERVICE:8083/api/reviews
+
+
+  eureka:
+    instance:
+      prefer-ip-address: true
+    client:
+      service-url:
+        defaultZone: "http://localhost:8761/eureka"
+      fetch-registry: true
+      register-with-eureka: true
+
+
+  resilience4j:
+    ratelimiter:
+      instances:
+        companyBreaker:
+          timeout-duration: 0
+          limit-refresh-period: 4
+          limit-for-period: 2
+    retry:
+      instances:
+        companyRetry:
+          max-attempts: 5
+          wait-duration: 2s
+    circuitbreaker:
+      instances:
+        companyBreaker:
+          register-health-indicator: true
+          sliding-window-size: 10
+          minimum-number-of-calls: 5
+          permitted-number-of-calls-in-half-open-state: 3
+          wait-duration-in-open-state: 10s
+          failure-rate-threshold: 50
+          automatic-transition-from-open-to-half-open-enabled: true
+          sliding-window-type: count_based
+
+  jobs:
+    service:
+      url: http://localhost:8082
+
+  companies:
+    service:
+      url: http://localhost:8081
+
+  reviews:
+    service:
+      url: http://localhost:8083
